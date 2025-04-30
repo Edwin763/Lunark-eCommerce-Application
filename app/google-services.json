@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "497071148133",
+    "project_id": "lunark-c4808",
+    "storage_bucket": "lunark-c4808.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497071148133:android:d496c3071363329cffca8c",
+        "android_client_info": {
+          "package_name": "com.example.lunark"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOlcyO62sIYW86hiv8F937t6YlWQnftBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
