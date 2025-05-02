@@ -144,7 +144,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,productId : String){
         Text(text = product.description, fontSize = 16.sp)
         Spacer(modifier=Modifier.width(16.dp))
 
-        if (product
+        if(product
             .otherDetails
             .isNotEmpty())
         Text(text = "Other Product Details : ",

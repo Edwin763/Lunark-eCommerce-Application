@@ -35,7 +35,7 @@ fun SignupScreen(
     var isLoading by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Background image
+
         Image(
             painter = painterResource(id = R.drawable.signupbanner),
             contentDescription = null,
@@ -43,7 +43,7 @@ fun SignupScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Foreground content
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

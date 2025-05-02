@@ -36,7 +36,7 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        // Background Image
+
         Image(
             painter = painterResource(id = R.drawable.loginbanner),
             contentDescription = null,
@@ -44,7 +44,7 @@ fun LoginScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Foreground Content
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

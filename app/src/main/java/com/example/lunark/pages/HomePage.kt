@@ -60,7 +60,7 @@ fun HomePage(modifier: Modifier = Modifier) {
                 .padding(4.dp)
         ) {
 
-            // Header Card with search icon
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()

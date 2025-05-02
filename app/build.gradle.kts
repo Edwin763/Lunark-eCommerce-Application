@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,9 +69,10 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 
     implementation ("androidx.compose.foundation:foundation:1.5.0")
-//    implementation ("androidx.compose.material3:material3:1.1.0")
-//    implementation ("io.coil-kt:coil-compose:2.2.2")
-//    implementation ("com.google.firebase:firebase-firestore-ktx:24.4.3")
-//    implementation ("com.tbuonomo:dotsindicator-compose:1.0.0")
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+
+
 
 }
