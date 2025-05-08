@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
 import androidx.navigation.NavController
+import com.example.lunark.GlobalNavigation.navController
 
 import com.example.lunark.pages.CartPage
 import com.example.lunark.pages.FavouritePage
@@ -42,7 +44,7 @@ fun HomeScreen(modifier:Modifier = Modifier,navController: NavController){
         NavItem("Profile", Icons.Default.Person)
 
     )
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by rememberSaveable  { mutableStateOf(0) }
     Scaffold (
         bottomBar ={
             NavigationBar (containerColor = backgroundColor){
@@ -72,8 +74,8 @@ fun HomeScreen(modifier:Modifier = Modifier,navController: NavController){
 fun ContentScreen(modifier:Modifier = Modifier,selectedIndex:Int){
     when (selectedIndex) {
         0 -> HomePage(modifier)
-        1 -> FavouritePage(modifier)
-        2 -> CartPage(modifier)
+        1 -> FavouritePage(modifier,navController)
+        2 -> CartPage(modifier, navController)
         3 -> ProfilePage(modifier)
     }
 

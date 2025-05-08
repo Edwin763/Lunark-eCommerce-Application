@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 class ProfileViewModel : ViewModel() {
 
@@ -223,6 +225,30 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
+
+    fun removeAddress(addressId: String) {
+        viewModelScope.launch {
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
+                val uid = currentUser.uid
+                firestore.collection("users").document(uid).collection("addresses")
+                    .document(addressId)
+                    .delete()
+                    .addOnSuccessListener {
+                        loadAddresses(uid) // Refresh the list after deleting
+                    }
+                    .addOnFailureListener { exception ->
+                        _profileState.value = _profileState.value.copy(error = exception.message)
+                    }
+            } else {
+                _profileState.value = _profileState.value.copy(
+                    error = "User not authenticated."
+                )
+            }
+        }
+    }
+
+
 
     fun signOut() {
         auth.signOut()

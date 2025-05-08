@@ -1,6 +1,9 @@
 package com.example.lunark.viewmodel
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.example.lunark.model.UserModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -50,5 +53,12 @@ class AuthViewModel : ViewModel() {
 
 
 
+    }
+    fun logout(navController: NavController, context: Context) {
+        auth.signOut()
+        Toast.makeText(context, "Successfully logged out", Toast.LENGTH_LONG).show()
+        navController.navigate("login") {
+            popUpTo("home") { inclusive = true }
+        }
     }
 }

@@ -30,14 +30,12 @@ object AppUtil {
 
                         }else{
                             showToast(context,"Failed Adding Item To Cart")
-
-
                         }
                     }
             }
         }
-
     }
+
     fun removeFromCart(context: Context,productId: String,removeAll : Boolean = false){
         val userDoc = Firebase.firestore.collection("users")
             .document(FirebaseAuth.getInstance().currentUser?.uid!!)
@@ -62,12 +60,75 @@ object AppUtil {
 
                         }else{
                             showToast(context,"Failed Removing Item From The Cart")
-
-
                         }
                     }
             }
         }
+    }
 
+    fun getCurrentUserId(context: Context): String? {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        return currentUser?.uid
+    }
+
+    fun getDiscountPercentage():Float{
+        return 10.0f
+    }
+
+    fun getTaxPercentage():Float{
+        return 13.0f
+    }
+
+    // FIX: Updated to correctly update favouriteItems instead of cartItems
+    fun addToFavourite(context: Context,productId: String){
+        val userDoc = Firebase.firestore.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser?.uid!!)
+
+        userDoc.get().addOnCompleteListener{
+            if(it.isSuccessful){
+                val currentFavourite = it.result.get("favouriteItems") as? Map<String,Long> ?: emptyMap()
+                val currentQuantity = currentFavourite[productId]?:0
+                val updatedQuantity = currentQuantity +1;
+                // FIX: Changed cartItems to favouriteItems
+                val updatedFavourite = mapOf("favouriteItems.$productId" to updatedQuantity)
+
+                userDoc.update(updatedFavourite)
+                    .addOnCompleteListener{
+                        if (it.isSuccessful){
+                            showToast(context,"Item Added To Favourites")
+                        }else{
+                            showToast(context,"Failed Adding Item To Favourites")
+                        }
+                    }
+            }
+        }
+    }
+
+    fun removeFromFavourite(context: Context,productId: String,removeAll : Boolean = false){
+        val userDoc = Firebase.firestore.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser?.uid!!)
+
+        userDoc.get().addOnCompleteListener{
+            if(it.isSuccessful){
+                val currentFavourite = it.result.get("favouriteItems") as? Map<String,Long> ?: emptyMap()
+                val currentQuantity = currentFavourite[productId]?:0
+                val updatedQuantity = currentQuantity -1;
+
+                val updatedFavourite =
+                    if (updatedQuantity<=0 || removeAll)
+                        mapOf("favouriteItems.$productId" to FieldValue.delete())
+                    else
+                        mapOf("favouriteItems.$productId" to updatedQuantity)
+
+                userDoc.update(updatedFavourite)
+                    .addOnCompleteListener{
+                        if (it.isSuccessful){
+                            showToast(context,"Item Removed From Favourites")
+                        }else{
+                            showToast(context,"Failed Removing Item From Favourites")
+                        }
+                    }
+            }
+        }
     }
 }

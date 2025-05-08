@@ -2,9 +2,7 @@ package com.example.lunark
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,101 +10,187 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.lunark.components.ProductDetailsView
-import com.example.lunark.model.Screen
+import com.example.lunark.pages.AddressesPage
+import com.example.lunark.pages.CartPage
 import com.example.lunark.pages.CategoryProductPage
+import com.example.lunark.pages.CheckoutPage
+import com.example.lunark.pages.EditProfilePage
+import com.example.lunark.pages.FavouritePage
+import com.example.lunark.pages.HelpPage
+import com.example.lunark.pages.OrderPage
 import com.example.lunark.pages.ProfilePage
+import com.example.lunark.pages.SettingsPage
 import com.example.lunark.screens.AuthScreen
 import com.example.lunark.screens.HomeScreen
 import com.example.lunark.screens.LoginScreen
+
 import com.example.lunark.screens.SignupScreen
 import com.example.lunark.screens.SplashScreen
-
+import com.example.lunark.viewmodel.ProfileViewModel
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
 @Composable
-fun Appnavigation(modifier :Modifier = Modifier){
-
+fun Appnavigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     GlobalNavigation.navController = navController
     val isLoggedIn = Firebase.auth.currentUser != null
-    val firstPage = if (isLoggedIn) "home" else "auth"
 
     NavHost(navController = navController, startDestination = "splash") {
         composable(route = "splash") {
-            SplashScreen(modifier,navController)
+            SplashScreen(modifier, navController)
         }
 
         composable("auth") {
             AuthScreen(modifier, navController)
         }
+
         composable("login") {
             LoginScreen(modifier, navController)
         }
+
         composable("signup") {
             SignupScreen(modifier, navController)
         }
+
         composable("home") {
             HomeScreen(modifier, navController)
         }
-        composable("category-products/{categoryId}") {
-            var categoryId = it.arguments?.getString("categoryId")
-            CategoryProductPage(modifier, categoryId ?: "")
+        composable("favorites") {
+            FavouritePage(modifier,navController)
         }
-        composable("product-details/{productId}") {
-            var productId = it.arguments?.getString("productId")
-            ProductDetailsView(modifier, productId ?: "")
+        composable("cart") {
+            CartPage(modifier, navController)
         }
-        composable(Screen.Profile.route) {
+        composable("checkout") {
+            CheckoutPage(modifier)
+        }
+
+
+        // Profile route
+        composable("profile") {
             ProfilePage(
+                modifier = modifier,
                 navigateToOrderDetails = { orderId ->
-                    navController.navigate(Screen.OrderDetails(orderId).createRoute(orderId))
+                    navController.navigate("order-details/$orderId")
                 },
                 navigateToEditProfile = {
-                    navController.navigate(Screen.EditProfile.route)
+                    navController.navigate("edit-profile")
                 },
                 navigateToAddresses = {
-                    navController.navigate(Screen.Addresses.route)
+                    navController.navigate("addresses")
                 },
                 navigateToSettings = {
-                    navController.navigate(Screen.Settings.route)
+                    navController.navigate("settings")
                 },
                 navigateToHelp = {
-                    navController.navigate(Screen.Help.route)
+                    navController.navigate("help")
                 },
                 navigateToAllOrders = {
-                    navController.navigate(Screen.AllOrders.route)
+                    navController.navigate("orders")
                 },
                 onSignOut = {
-                    navController.navigate("signup")
+                    // Navigate back to auth screen after sign out
+                    navController.navigate("auth") {
+                        popUpTo("home") { inclusive = true }
+                    }
                 }
             )
         }
-        composable(Screen.EditProfile.route) {
-            // EditProfileScreen()
+
+        // Profile-related routes
+        composable("edit-profile") {
+            val profileViewModel: ProfileViewModel = viewModel()
+            EditProfilePage(
+                modifier,navController,
+                viewModel = profileViewModel,
+                onBack = { navController.popBackStack() }
+
+            )
+
         }
-        composable(Screen.Addresses.route) {
-            // AddressesScreen()
+
+        composable("addresses") {
+            val profileViewModel: ProfileViewModel = viewModel()
+
+
+            AddressesPage(
+                modifier, navController,
+                viewModel = profileViewModel,
+
+
+                onBack = { navController.popBackStack()  }
+            )
+
         }
-        composable(Screen.Settings.route) {
-            // SettingsScreen()
+
+        composable("settings") {
+            SettingsPage(
+                modifier,navController,
+                onBack = { navController.popBackStack() },
+                onSignOut = {
+
+                    navController.navigate("login") {
+                        popUpTo("profile") { inclusive = true }
+                    }
+                }
+            )
+
+
+
         }
-        composable(Screen.Help.route) {
-            // HelpScreen()
+
+        composable("help") {
+            val profileViewModel: ProfileViewModel = viewModel()
+
+            HelpPage(
+                modifier, navController,
+                viewModel = profileViewModel,
+                onBack = { navController.popBackStack()  }
+            )
         }
-        composable(Screen.AllOrders.route) {
-            // AllOrdersScreen()
+
+        composable("orders") {
+
+            val profileViewModel: ProfileViewModel = viewModel()
+            OrderPage(
+                modifier, navController,
+                viewModel = profileViewModel,
+
+
+                onBack = { navController.popBackStack()  }
+            )
+
         }
+
         composable(
-            route = Screen.OrderDetails("{orderId}").route,
+            "order-details/{orderId}",
             arguments = listOf(navArgument("orderId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val orderId = backStackEntry.arguments?.getString("orderId") ?: return@composable
-            // OrderDetailsScreen(orderId)
+        ) {
+            val orderId = it.arguments?.getString("orderId") ?: ""
+            // TODO: Implement OrderDetailsPage
+            // OrderDetailsPage(modifier, orderId, navController)
+        }
+
+        // Category and Product routes with proper navArguments
+        composable(
+            "category-products/{categoryId}",
+            arguments = listOf(navArgument("categoryId") { type = NavType.StringType })
+        ) {
+            val categoryId = it.arguments?.getString("categoryId") ?: ""
+            CategoryProductPage(modifier, categoryId)
+        }
+
+        composable(
+            "product-details/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.StringType })
+        ) {
+            val productId = it.arguments?.getString("productId") ?: ""
+            ProductDetailsView(modifier, productId)
         }
     }
-    }
+}
 
 object GlobalNavigation{
     lateinit var navController: NavHostController

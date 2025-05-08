@@ -6,7 +6,10 @@ data class UserModel(
     val email: String="",
     val uid: String="",
     val cartItems:Map<String,Long> = emptyMap(),
-    val profileImageUrl: String = ""
+    val address: String="",
+    val favouriteItems:Map<String,Long> = emptyMap(),
+
+
 //    val password: String
 
 )
