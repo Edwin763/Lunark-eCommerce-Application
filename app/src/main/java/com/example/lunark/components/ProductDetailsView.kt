@@ -1,11 +1,13 @@
 package com.example.lunark.components
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,16 +25,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lunark.AppUtil
 import com.example.lunark.GlobalNavigation
 import com.example.lunark.model.ProductModel
 import com.example.lunark.model.UserModel
+import com.example.lunark.viewmodel.PaymentViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -43,7 +48,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailsView(modifier: Modifier = Modifier, productId: String, navController: NavController? = null) {
+fun ProductDetailsView(modifier: Modifier = Modifier,
+                       productId: String,
+                       navController: NavController? = null,
+
+                       paymentViewModel: PaymentViewModel = viewModel(),
+                       ) {
     val backgroundColor = Color(0xFF927BBF)
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
@@ -60,6 +70,11 @@ fun ProductDetailsView(modifier: Modifier = Modifier, productId: String, navCont
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+    val paymentState by paymentViewModel.paymentState.collectAsState()
+
+    var showPaymentDialog by remember { mutableStateOf(false) }
+    var phoneNumber by remember { mutableStateOf("") }
 
     // Function to check favorite status
     val checkFavoriteStatus = {
@@ -164,7 +179,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier, productId: String, navCont
         }
     ) { paddingValues ->
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
@@ -352,8 +367,8 @@ fun ProductDetailsView(modifier: Modifier = Modifier, productId: String, navCont
 
                     Button(
                         onClick = {
-                            AppUtil.addToCart(context, productId)
-                            GlobalNavigation.navController.navigate("cart")
+                            showPaymentDialog = true
+
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = backgroundColor,
@@ -367,6 +382,9 @@ fun ProductDetailsView(modifier: Modifier = Modifier, productId: String, navCont
                         Text(text = "Buy Now", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
+
+                    // Payment dialog
+
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -443,5 +461,67 @@ fun ProductDetailsView(modifier: Modifier = Modifier, productId: String, navCont
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
+        if (showPaymentDialog) {
+            AlertDialog(
+                onDismissRequest = { showPaymentDialog = false },
+                title = { Text("M-Pesa Payment") },
+                text = {
+                    Column {
+                        Text("Enter your M-Pesa phone number")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = phoneNumber,
+                            onValueChange = { phoneNumber = it },
+                            label = { Text("Phone Number") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            paymentViewModel.initiatePayment(
+                                context = context,
+                                phoneNumber = phoneNumber,
+                                amount = product.price.toString(),
+                                productId = productId
+                            )
+                            showPaymentDialog = false
+                        }
+                    ) {
+                        Text("Pay")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showPaymentDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+
+        // Handle payment state
+        when (val state = paymentState) {
+            is PaymentViewModel.PaymentState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            is PaymentViewModel.PaymentState.Success -> {
+                LaunchedEffect(state) {
+                    Toast.makeText(
+                        context,
+                        "STK Push sent. Please check your phone to complete payment.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            is PaymentViewModel.PaymentState.Error -> {
+                LaunchedEffect(state) {
+                    Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
+                }
+            }
+            else -> {}
+        }
     }
-}
+    }

@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.lunark.components.ProductDetailsView
+import com.example.lunark.model.ProductModel
 import com.example.lunark.pages.AddressesPage
 import com.example.lunark.pages.CartPage
 import com.example.lunark.pages.CategoryProductPage
@@ -26,6 +27,7 @@ import com.example.lunark.screens.LoginScreen
 
 import com.example.lunark.screens.SignupScreen
 import com.example.lunark.screens.SplashScreen
+import com.example.lunark.viewmodel.PaymentViewModel
 import com.example.lunark.viewmodel.ProfileViewModel
 
 import com.google.firebase.Firebase
@@ -187,7 +189,9 @@ fun Appnavigation(modifier: Modifier = Modifier) {
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
         ) {
             val productId = it.arguments?.getString("productId") ?: ""
-            ProductDetailsView(modifier, productId)
+
+            val paymentViewModel = viewModel<PaymentViewModel>()
+            ProductDetailsView(modifier, productId,paymentViewModel = paymentViewModel)
         }
     }
 }
