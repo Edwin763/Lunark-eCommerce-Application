@@ -183,7 +183,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Background Image (Car)
+
             product.images.firstOrNull()?.let { imageUrl ->
                 AsyncImage(
                     model = imageUrl,
@@ -195,7 +195,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                         .align(Alignment.TopCenter)
                 )
 
-                // Add a gradient overlay on top of image
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -204,7 +204,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                 )
             }
 
-            // Content Card
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -214,7 +214,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                // Product Title with shadow
+
                 Text(
                     text = product.title,
                     fontWeight = FontWeight.Bold,
@@ -223,7 +223,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
                 )
 
-                // Image Carousel
+
                 Column {
                     val pagerState = rememberPagerState(pageCount = { product.images.size })
 
@@ -268,7 +268,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Price and Favorite Section
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -283,14 +283,14 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                         Column {
                             if (product.price > product.actualPrice) {
                                 Text(
-                                    text = "$${product.price}",
+                                    text = "Ksh.${product.price}",
                                     fontSize = 16.sp,
                                     color = Color.Gray,
                                     style = TextStyle(textDecoration = TextDecoration.LineThrough)
                                 )
                             }
                             Text(
-                                text = "$${product.actualPrice}",
+                                text = "Ksh.${product.actualPrice}",
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = backgroundColor
@@ -299,7 +299,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                        // Favorite counter
+
                         if (favoriteCount > 0) {
                             Text(
                                 text = "$favoriteCount",
@@ -310,7 +310,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                             )
                         }
 
-                        // Favorite button with colorful background
+
                         FloatingActionButton(
                             onClick = {
                                 if (isFavorite) {
@@ -338,7 +338,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Action Buttons
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -383,12 +383,12 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                     }
                 }
 
-                    // Payment dialog
+
 
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Description Section
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -415,7 +415,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Product Details Section
+
                 if (product.otherDetails.isNotEmpty()) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -457,7 +457,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                     }
                 }
 
-                // Add space at the bottom for better scrolling experience
+
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
@@ -483,7 +483,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
                             paymentViewModel.initiatePayment(
                                 context = context,
                                 phoneNumber = phoneNumber,
-                                amount = product.price.toString(),
+                                amount = product.actualPrice.toString(),
                                 productId = productId
                             )
                             showPaymentDialog = false
@@ -500,7 +500,7 @@ fun ProductDetailsView(modifier: Modifier = Modifier,
             )
         }
 
-        // Handle payment state
+
         when (val state = paymentState) {
             is PaymentViewModel.PaymentState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

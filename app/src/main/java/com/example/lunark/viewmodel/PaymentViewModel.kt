@@ -1,6 +1,8 @@
 package com.example.lunark.viewmodel
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lunark.mpesa.MPesaService
@@ -16,6 +18,7 @@ class PaymentViewModel : ViewModel() {
     private val _paymentState = MutableStateFlow<PaymentState>(PaymentState.Idle)
     val paymentState = _paymentState.asStateFlow()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun initiatePayment(
         context: Context,
         phoneNumber: String,

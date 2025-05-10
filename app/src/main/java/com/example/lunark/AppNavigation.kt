@@ -9,8 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.lunark.admin.AdminHomeScreen
+import com.example.lunark.admin.RoleSelectionScreen
 import com.example.lunark.components.ProductDetailsView
-import com.example.lunark.model.ProductModel
 import com.example.lunark.pages.AddressesPage
 import com.example.lunark.pages.CartPage
 import com.example.lunark.pages.CategoryProductPage
@@ -21,6 +22,8 @@ import com.example.lunark.pages.HelpPage
 import com.example.lunark.pages.OrderPage
 import com.example.lunark.pages.ProfilePage
 import com.example.lunark.pages.SettingsPage
+import com.example.lunark.products.AddProductScreen
+import com.example.lunark.products.UpdateProductScreen
 import com.example.lunark.screens.AuthScreen
 import com.example.lunark.screens.HomeScreen
 import com.example.lunark.screens.LoginScreen
@@ -29,6 +32,8 @@ import com.example.lunark.screens.SignupScreen
 import com.example.lunark.screens.SplashScreen
 import com.example.lunark.viewmodel.PaymentViewModel
 import com.example.lunark.viewmodel.ProfileViewModel
+import com.example.lunark.products.ViewProductsScreen
+
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -55,10 +60,18 @@ fun Appnavigation(modifier: Modifier = Modifier) {
         composable("signup") {
             SignupScreen(modifier, navController)
         }
+        composable("roleSelection") {
+            RoleSelectionScreen(modifier,navController)
+        }
 
         composable("home") {
             HomeScreen(modifier, navController)
         }
+
+        composable("adminHome") {
+            AdminHomeScreen(navController = navController)
+        }
+
         composable("favorites") {
             FavouritePage(modifier,navController)
         }
@@ -193,7 +206,13 @@ fun Appnavigation(modifier: Modifier = Modifier) {
             val paymentViewModel = viewModel<PaymentViewModel>()
             ProductDetailsView(modifier, productId,paymentViewModel = paymentViewModel)
         }
+        composable("addProduct"){ AddProductScreen(navController) }
+        composable("viewProduct"){ ViewProductsScreen(navController) }
+        composable("updateProduct/{id}") {
+                passedData -> UpdateProductScreen(navController, passedData.arguments?.getString("id")!!)
+        }
     }
+
 }
 
 object GlobalNavigation{

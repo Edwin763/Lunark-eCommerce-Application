@@ -601,7 +601,7 @@ fun SignupScreen(
                                                             delay(1500) // Show animation for 1.5 seconds
                                                             isLoading = false
                                                             showSuccessAnimation = false
-                                                            navController.navigate("home") {
+                                                            navController.navigate("roleSelection") {
                                                                 popUpTo("auth") { inclusive = true }
                                                             }
                                                         }

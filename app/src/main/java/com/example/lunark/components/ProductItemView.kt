@@ -58,21 +58,21 @@ fun ProductItemView(modifier: Modifier = Modifier, product: ProductModel) {
                 modifier = Modifier.padding(8.dp)
             )
 
-            Row(
+            Column (
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(6.dp),
-                verticalAlignment = Alignment.CenterVertically
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "$${product.price}",
+                    text = "Ksh.${product.price}",
                     fontSize = 14.sp,
                     color = Color.Black,
                     style = TextStyle(textDecoration = TextDecoration.LineThrough)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "$${product.actualPrice}",
+                    text = "Ksh.${product.actualPrice}",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black

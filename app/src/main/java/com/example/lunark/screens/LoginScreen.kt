@@ -187,6 +187,8 @@ fun LoginScreen(
                         .padding(horizontal = 24.dp, vertical = 32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+
+
                     // Email Field - with black text color
                     OutlinedTextField(
                         value = email,
@@ -312,7 +314,7 @@ fun LoginScreen(
                             authViewModel.login(email, password) { success, errorMessage ->
                                 isLoading = false
                                 if (success) {
-                                    navController.navigate("home") {
+                                    navController.navigate("roleSelection") {
                                         popUpTo("auth") { inclusive = true }
                                     }
                                 } else {
