@@ -20,8 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.lunark.GlobalNavigation
 import com.example.lunark.products.AddProductScreen
 import com.example.lunark.screens.AppColors
+import com.example.lunark.viewmodel.UserData
 import com.example.lunark.viewmodel.UserViewModel
 
 import com.google.firebase.Firebase
@@ -37,45 +39,40 @@ fun AdminHomeScreen(
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
 
-
-
     LaunchedEffect(Unit) {
         Firebase.firestore
             .collection("users")
-            .document(Firebase.auth.currentUser!!.uid!!)
+            .document(Firebase.auth.currentUser!!.uid)
             .get()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     name = it.result.getString("firstName") ?: ""
                     email = it.result.getString("email") ?: ""
-
-
                 }
             }
     }
+
     LaunchedEffect(Unit) {
         viewModel.fetchUserCount()
+        viewModel.fetchRecentUsers() // Fetch recent users for the dashboard
     }
 
-    val userCount by remember { mutableStateOf(viewModel.userCount) }
+    val userCount by viewModel.userCount
+    val recentUsers by viewModel.recentUsers
+
+
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("Dashboard", "Users", "Content", "Settings")
 
     // Sample data for the dashboard
     val statistics = listOf(
-        Statistic("Total Users","7777", Icons.Default.People),
-        Statistic("Active Users", "987", Icons.Default.PersonPin),
-        Statistic("New Today", "12", Icons.Default.PersonAdd),
-        Statistic("Content Views", "45.6K", Icons.Default.Visibility)
+        Statistic("Total Users", userCount.toString(), Icons.Default.People),
+        Statistic("Active Users",userCount.toString() , Icons.Default.PersonPin),
+        Statistic("New Today","2", Icons.Default.PersonAdd),
+        Statistic("Content Views",userCount.toString() , Icons.Default.Visibility)
     )
 
-    // Sample data for recent users
-    val recentUsers = listOf(
-        User("Flo vit","vit@gmail.com","Online"),
-        User("Jane Smith", "jane.smith@example.com", "Offline"),
-        User("Robert Johnson", "robert.j@example.com", "Online"),
-        User("Alice Williams", "alice.w@example.com", "Online")
-    )
+    // Get recent users from the ViewModel
 
     Scaffold(
         topBar = {
@@ -115,7 +112,7 @@ fun AdminHomeScreen(
                                 imageVector = when (index) {
                                     0 -> Icons.Default.Dashboard
                                     1 -> Icons.Default.People
-                                    2 -> Icons.Default.Article
+                                    2 -> Icons.Default.Add
                                     else -> Icons.Default.Settings
                                 },
                                 contentDescription = title
@@ -137,8 +134,8 @@ fun AdminHomeScreen(
         ) {
             when (selectedTab) {
                 0 -> DashboardContent(statistics, recentUsers)
-                1 -> AddProductScreen(navController)
-                2 -> ContentManagementScreen()
+                1 -> UsersScreen(viewModel,navController)  // Use our new UsersScreen
+                2 -> AddProductScreen(navController)
                 3 -> SettingsScreen()
             }
         }
@@ -146,7 +143,10 @@ fun AdminHomeScreen(
 }
 
 @Composable
-fun DashboardContent(statistics: List<Statistic>, recentUsers: List<User>) {
+fun DashboardContent(statistics: List<Statistic>, recentUsers: List<UserData>) {
+    var selectedTab by remember { mutableStateOf(0) }
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -203,8 +203,31 @@ fun DashboardContent(statistics: List<Statistic>, recentUsers: List<User>) {
         }
 
         // Recent users list
-        items(recentUsers) { user ->
-            UserListItem(user = user)
+        if (recentUsers.isEmpty()) {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No users found",
+                            color = Color.Gray,
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+            }
+        } else {
+            items(recentUsers) { user ->
+                UserListItem(user = user)
+            }
         }
 
         // Quick actions
@@ -225,14 +248,14 @@ fun DashboardContent(statistics: List<Statistic>, recentUsers: List<User>) {
                 ActionButton(
                     icon = Icons.Default.PersonAdd,
                     text = "Add User",
-                    onClick = { /* Add user action */ },
+                    onClick = { GlobalNavigation.navController.navigate("user") },  // Navigate to Users tab
                     modifier = Modifier.weight(1f)
                 )
 
                 ActionButton(
                     icon = Icons.Default.Add,
-                    text = "New Content",
-                    onClick = { /* Add content action */ },
+                    text = "Add Product",
+                    onClick = { GlobalNavigation.navController.navigate("addProduct")},
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -290,27 +313,7 @@ fun StatisticCard(statistic: Statistic, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun UserListItem(user: User) {
-//    var name by remember { mutableStateOf("") }
-//    var email by remember { mutableStateOf("") }
-//
-//
-//
-//    LaunchedEffect(Unit) {
-//        Firebase.firestore
-//            .collection("users")
-//            .document(Firebase.auth.currentUser!!.uid!!)
-//            .get()
-//            .addOnCompleteListener {
-//                if (it.isSuccessful) {
-//                    name = it.result.getString("firstName") ?: ""
-//                    email = it.result.getString("email") ?: ""
-//
-//
-//                }
-//            }
-//    }
-
+fun UserListItem(user: UserData) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -320,7 +323,6 @@ fun UserListItem(user: User) {
             defaultElevation = 2.dp
         )
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -336,7 +338,7 @@ fun UserListItem(user: User) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = user.name.first().toString(),
+                    text = user.firstName.firstOrNull()?.toString() ?: "?",
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
@@ -349,7 +351,7 @@ fun UserListItem(user: User) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = user.name,
+                    text = "${user.firstName} ${user.lastName}",
                     fontWeight = FontWeight.Medium,
                     fontSize = 16.sp
                 )
@@ -410,47 +412,11 @@ fun ActionButton(
     }
 }
 
-//@Composable
-//fun UsersContent() {
-//    // Placeholder for Users tab
-//    Box(
-//        modifier = Modifier.fillMaxSize(),
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Text(text = "Users Management (Coming Soon)")
-//    }
-//}
-//
-@Composable
-fun ContentManagementScreen() {
-    // Placeholder for Content tab
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Content Management (Coming Soon)")
-    }
-}
 
-@Composable
-fun SettingsScreen() {
-    // Placeholder for Settings tab
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Admin Settings (Coming Soon)")
-    }
-}
+
 
 data class Statistic(
     val title: String,
     val value: String,
     val icon: ImageVector
-)
-
-data class User(
-    val name: String,
-    val email: String,
-    val status: String
 )

@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.lunark.admin.AdminHomeScreen
 import com.example.lunark.admin.RoleSelectionScreen
+import com.example.lunark.admin.UsersScreen
 import com.example.lunark.components.ProductDetailsView
 import com.example.lunark.pages.AddressesPage
 import com.example.lunark.pages.CartPage
@@ -33,6 +34,7 @@ import com.example.lunark.screens.SplashScreen
 import com.example.lunark.viewmodel.PaymentViewModel
 import com.example.lunark.viewmodel.ProfileViewModel
 import com.example.lunark.products.ViewProductsScreen
+import com.example.lunark.viewmodel.UserViewModel
 
 
 import com.google.firebase.Firebase
@@ -113,6 +115,10 @@ fun Appnavigation(modifier: Modifier = Modifier) {
                 }
             )
         }
+        composable("user")
+        { var userViewModel: UserViewModel=viewModel()
+            UsersScreen(viewModel=userViewModel,navController) }
+
 
         // Profile-related routes
         composable("edit-profile") {

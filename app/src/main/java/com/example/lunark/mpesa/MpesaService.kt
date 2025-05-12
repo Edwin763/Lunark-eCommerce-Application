@@ -20,8 +20,7 @@ class MPesaService(private val context: Context) {
     private val BASE_URL = "https://sandbox.safaricom.co.ke/"
     private val CONSUMER_KEY = "3z8JLAbvVO1AJQdOFJ1SyiJJhcGbKR13LPCPPlXLD8JiQi5l"
     private val CONSUMER_SECRET = "uA05hIMUKgZsRgoInhUzwsHG91LX4juFUwwy70by2PMsfW17qYmd7I2pIL9qFhOn"
-    private val BUSINESS_SHORT_CODE = "174379" // Standard sandbox shortcode
-    // Correct sandbox passkey
+    private val BUSINESS_SHORT_CODE = "174379"
     private val PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
     // Get a unique URL from webhook.site
     private val CALLBACK_URL = "https://webhook.site/f016077a-87ee-49a0-abfd-f2134a61400d"
