@@ -68,31 +68,12 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.0")
     implementation("com.tbuonomo:dotsindicator:5.1.0")
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
-
     implementation ("androidx.compose.foundation:foundation:1.5.0")
-
     implementation("androidx.core:core-splashscreen:1.0.1")
-
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
-
-    // Coroutines for async operations
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("org.jetbrains.compose.material3:material3-icons-extended:1.5.0")
 }

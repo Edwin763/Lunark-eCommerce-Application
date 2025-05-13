@@ -45,9 +45,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 
-// Define the color scheme for the app
+
 object AppColors {
     val primaryColor = Color(0xFF927BBF)
     val secondaryColor = Color(0xFF7C67AD)
@@ -76,18 +77,18 @@ fun SignupScreen(
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    // Form validation states
+
     var firstnameError by remember { mutableStateOf<String?>(null) }
     var lastnameError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
     var confirmPasswordError by remember { mutableStateOf<String?>(null) }
 
-    // Animation states
+
     var showSuccessAnimation by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Background with gradient overlay
+
         Image(
             painter = painterResource(id = R.drawable.signupbanner),
             contentDescription = null,
@@ -97,7 +98,7 @@ fun SignupScreen(
                 .blur(if (isLoading) 3.dp else 0.dp)
         )
 
-        // Background that matches backgroundColor
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -111,7 +112,7 @@ fun SignupScreen(
                 )
         )
 
-        // Success Animation (shown when signup is successful)
+
         AnimatedVisibility(
             visible = showSuccessAnimation,
             enter = fadeIn(),
@@ -156,7 +157,6 @@ fun SignupScreen(
             }
         }
 
-        // Main Content - Making it scrollable
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -178,17 +178,14 @@ fun SignupScreen(
                             .padding(vertical = 24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // App Logo or Brand Icon
-                        Icon(
-                            imageVector = Icons.Default.NightsStay, // Replace with your app icon
+
+                        Image(
+                            painter = painterResource(id = R.drawable.logo),
                             contentDescription = "App Logo",
-                            tint = AppColors.textPrimary,
-                            modifier = Modifier
-                                .size(60.dp)
-                                .padding(bottom = 8.dp)
+                            modifier = Modifier.size(48.dp).padding(bottom=8.dp)
                         )
 
-                        // Title Text
+
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -216,7 +213,7 @@ fun SignupScreen(
 
                         Spacer(modifier = Modifier.height(32.dp))
 
-                        // Enhanced Card with styled UI
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -247,7 +244,7 @@ fun SignupScreen(
                             shape = RoundedCornerShape(24.dp)
                         ) {
                             Box(modifier = Modifier.fillMaxWidth()) {
-                                // Decorative accent bar at the top of the card
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -267,7 +264,7 @@ fun SignupScreen(
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(top = 8.dp) // Account for the accent bar
+                                        .padding(top = 8.dp)
                                         .background(
                                             brush = Brush.verticalGradient(
                                                 colors = listOf(
@@ -281,7 +278,7 @@ fun SignupScreen(
                                         .padding(horizontal = 24.dp, vertical = 32.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                    // First Name Field
+
                                     OutlinedTextField(
                                         value = firstname,
                                         onValueChange = {
@@ -322,7 +319,7 @@ fun SignupScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    // Last Name Field
+
                                     OutlinedTextField(
                                         value = lastname,
                                         onValueChange = {
@@ -363,7 +360,7 @@ fun SignupScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    // Email Field
+
                                     OutlinedTextField(
                                         value = email,
                                         onValueChange = {
@@ -405,7 +402,7 @@ fun SignupScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    // Password Field
+
                                     OutlinedTextField(
                                         value = password,
                                         onValueChange = {
@@ -457,7 +454,7 @@ fun SignupScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    // Confirm Password Field
+
                                     OutlinedTextField(
                                         value = confirmPassword,
                                         onValueChange = {
@@ -509,52 +506,12 @@ fun SignupScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    // Privacy Policy Text
-//                                    Row(
-//                                        verticalAlignment = Alignment.CenterVertically,
-//                                        modifier = Modifier.fillMaxWidth()
-//                                    ) {
-//                                        Text(
-//                                            text = "By signing up, you agree to our ",
-//                                            color = Color.Gray,
-//                                            fontSize = 12.sp,
-//                                            textAlign = TextAlign.Center
-//                                        )
-//                                        TextButton(
-//                                            onClick = { /* Navigate to Terms */ },
-//                                            contentPadding = PaddingValues(0.dp)
-//                                        ) {
-//                                            Text(
-//                                                text = "Terms",
-//                                                color = AppColors.primaryColor,
-//                                                fontSize = 12.sp,
-//                                                fontWeight = FontWeight.Bold
-//                                            )
-//                                        }
-//                                        Text(
-//                                            text = " and ",
-//                                            color = Color.Gray,
-//                                            fontSize = 12.sp
-//                                        )
-//                                        TextButton(
-//                                            onClick = { /* Navigate to Privacy Policy */ },
-//                                            contentPadding = PaddingValues(0.dp)
-//                                        ) {
-//                                            Text(
-//                                                text = "Privacy Policy",
-//                                                color = AppColors.primaryColor,
-//                                                fontSize = 12.sp,
-//                                                fontWeight = FontWeight.Bold
-//                                            )
-//                                        }
-//                                    }
 
-                                    Spacer(modifier = Modifier.height(8.dp))
 
-                                    // Signup Button
+
                                     Button(
                                         onClick = {
-                                            // Validate form
+
                                             var hasError = false
 
                                             if (firstname.isBlank()) {
@@ -595,10 +552,10 @@ fun SignupScreen(
                                                 isLoading = true
                                                 authViewModel.signup(firstname, lastname, email, password) { success, errorMessage ->
                                                     if (success) {
-                                                        // Show success animation before navigating
+
                                                         showSuccessAnimation = true
                                                         scope.launch {
-                                                            delay(1500) // Show animation for 1.5 seconds
+                                                            delay(1500)
                                                             isLoading = false
                                                             showSuccessAnimation = false
                                                             navController.navigate("roleSelection") {
@@ -642,7 +599,7 @@ fun SignupScreen(
                                         )
                                     }
 
-                                    // Social Sign-up Options
+
                                     Spacer(modifier = Modifier.height(24.dp))
 
                                     Row(
@@ -667,14 +624,14 @@ fun SignupScreen(
 
                                     Spacer(modifier = Modifier.height(16.dp))
 
-                                    // Social Media Login Buttons
+
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceEvenly
                                     ) {
-                                        // Google
+
                                         IconButton(
-                                            onClick = { /* Handle Google sign-up */ },
+                                            onClick = {},
                                             modifier = Modifier
                                                 .size(48.dp)
                                                 .background(
@@ -688,7 +645,7 @@ fun SignupScreen(
                                                 )
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Email, // Replace with Google icon
+                                                imageVector = Icons.Filled.Google,
                                                 contentDescription = "Sign up with Google",
                                                 tint = Color.Red,
                                                 modifier = Modifier.size(24.dp)
@@ -697,7 +654,7 @@ fun SignupScreen(
 
                                         // Facebook
                                         IconButton(
-                                            onClick = { /* Handle Facebook sign-up */ },
+                                            onClick = {},
                                             modifier = Modifier
                                                 .size(48.dp)
                                                 .background(
@@ -711,7 +668,7 @@ fun SignupScreen(
                                                 )
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Facebook, // Replace with Facebook icon
+                                                imageVector = Icons.Default.Facebook,
                                                 contentDescription = "Sign up with Facebook",
                                                 tint = Color(0xFF1877F2),
                                                 modifier = Modifier.size(24.dp)
@@ -720,7 +677,7 @@ fun SignupScreen(
 
                                         // Apple
                                         IconButton(
-                                            onClick = { /* Handle Apple sign-up */ },
+                                            onClick = {},
                                             modifier = Modifier
                                                 .size(48.dp)
                                                 .background(
@@ -734,7 +691,7 @@ fun SignupScreen(
                                                 )
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Phone, // Replace with Apple icon
+                                                imageVector = Icons.Filled.Apple,
                                                 contentDescription = "Sign up with Apple",
                                                 tint = Color.Black,
                                                 modifier = Modifier.size(24.dp)
@@ -747,7 +704,7 @@ fun SignupScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Sign In Text
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center,

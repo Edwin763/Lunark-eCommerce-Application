@@ -80,31 +80,7 @@ fun HomePage(modifier: Modifier = Modifier) {
                     )
 
 
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 12.dp, end = 8.dp)
-                            .width(160.dp)
-                            .height(48.dp),
-                        placeholder = { Text("Search...", fontSize = 14.sp) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search",
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Color.White.copy(alpha = 0.9f),
-                            unfocusedContainerColor = Color.White.copy(alpha = 0.8f),
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(24.dp),
-                        singleLine = true
-                    )
+
                 }
             }
 

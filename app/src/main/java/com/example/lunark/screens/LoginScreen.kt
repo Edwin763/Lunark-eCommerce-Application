@@ -27,7 +27,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -39,7 +39,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,6 +46,7 @@ import androidx.navigation.NavController
 import com.example.lunark.AppUtil
 import com.example.lunark.R
 import com.example.lunark.viewmodel.AuthViewModel
+
 
 @Composable
 fun LoginScreen(
@@ -63,16 +63,16 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     val backgroundColor = Color(0xFF927BBF)
 
-    // Derived colors for consistent theme
+
     val accentColor = Color(0xFF6A4CAB)
     val lightPurple = Color(0xFFB29DDB)
     val darkPurple = Color(0xFF4A2D7D)
     val surfaceColor = Color.White
     val textColorOnDark = Color.White
     val textColorOnLight = darkPurple
-    val inputTextColor = Color.Black // Define black color for input text
+    val inputTextColor = Color.Black
 
-    // Gradient overlay for background
+
     val gradientOverlay = Brush.verticalGradient(
         colors = listOf(
             backgroundColor.copy(alpha = 0.7f),
@@ -80,7 +80,7 @@ fun LoginScreen(
         )
     )
 
-    // Animation for loading state
+
     val buttonAlpha by animateFloatAsState(
         targetValue = if (isLoading) 0.7f else 1f,
         label = "buttonAlpha"
@@ -91,7 +91,7 @@ fun LoginScreen(
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        // Background Image with blur effect
+
         Image(
             painter = painterResource(id = R.drawable.loginbanner),
             contentDescription = null,
@@ -101,14 +101,13 @@ fun LoginScreen(
                 .blur(radius = 3.dp)
         )
 
-        // Gradient overlay
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(gradientOverlay)
         )
 
-        // Scrollable Content
+
         val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
@@ -119,7 +118,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logo or App Icon
+
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -127,17 +126,16 @@ fun LoginScreen(
                     .background(surfaceColor.copy(alpha = 0.9f)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.Lock,
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = "App Logo",
-                    tint = accentColor,
                     modifier = Modifier.size(48.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Title Text with animated visibility
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -165,7 +163,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(36.dp))
 
-            // Card with white background for form fields
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -189,7 +187,7 @@ fun LoginScreen(
                 ) {
 
 
-                    // Email Field - with black text color
+
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
@@ -215,7 +213,7 @@ fun LoginScreen(
                             focusedLabelColor = accentColor,
                             unfocusedLabelColor = Color.Gray,
                             cursorColor = accentColor,
-                            // Set the text color to black
+
                             focusedTextColor = inputTextColor,
                             unfocusedTextColor = inputTextColor
                         ),
@@ -225,7 +223,7 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Password Field - with black text color
+
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
@@ -261,7 +259,7 @@ fun LoginScreen(
                             focusedLabelColor = accentColor,
                             unfocusedLabelColor = Color.Gray,
                             cursorColor = accentColor,
-                            // Set the text color to black
+
                             focusedTextColor = inputTextColor,
                             unfocusedTextColor = inputTextColor
                         ),
@@ -271,7 +269,7 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // "Remember Me" and "Forgot Password" Row
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -295,7 +293,7 @@ fun LoginScreen(
                             )
                         }
 
-                        TextButton(onClick = { /* Handle forgot password */ }) {
+                        TextButton(onClick = {}) {
                             Text(
                                 text = "Forgot Password?",
                                 color = accentColor,
@@ -307,7 +305,7 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Login Button with elevation and animation
+
                     Button(
                         onClick = {
                             isLoading = true
@@ -359,7 +357,7 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Social login options
+
                     Text(
                         text = "Or continue with",
                         color = textColorOnLight.copy(alpha = 0.6f),
@@ -368,31 +366,30 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Social login buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        // Google login button
+
                         SocialButton(
-                            onClick = { /* Handle Google login */ },
-                            icon = Icons.Default.Email,
+                            onClick = {},
+                            icon = painterResource(id = R.drawable.googleicon),
                             backgroundColor = Color(0xFFEA4335),
                             contentDescription = "Login with Google"
                         )
 
-                        // Facebook login button
+
                         SocialButton(
-                            onClick = { /* Handle Facebook login */ },
-                            icon = Icons.Default.Facebook,
+                            onClick = {},
+                            icon = painterResource(id = R.drawable.facebookicon),
                             backgroundColor = Color(0xFF1877F2),
                             contentDescription = "Login with Facebook"
                         )
 
-                        // Apple login button
+
                         SocialButton(
-                            onClick = { /* Handle Apple login */ },
-                            icon = Icons.Default.Star,
+                            onClick = {},
+                            icon = painterResource(id = R.drawable.appleicon),
                             backgroundColor = Color.Black,
                             contentDescription = "Login with Apple"
                         )
@@ -402,7 +399,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Sign Up Text with improved styling
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -433,18 +429,11 @@ fun LoginScreen(
     }
 }
 
-/**
- * A composable function that creates a social media login button.
- *
- * @param onClick The callback that is triggered when this button is clicked
- * @param icon The icon to be displayed inside the button
- * @param backgroundColor The background color of the button
- * @param contentDescription The content description for accessibility
- */
+
 @Composable
 fun SocialButton(
     onClick: () -> Unit,
-    icon: ImageVector,
+    icon: Painter,
     backgroundColor: Color,
     contentDescription: String
 ) {
@@ -457,10 +446,10 @@ fun SocialButton(
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            imageVector = icon,
+            painter = icon,
             contentDescription = contentDescription,
             tint = Color.White,
             modifier = Modifier.size(24.dp)
         )
-    }
-}
+
+}}
